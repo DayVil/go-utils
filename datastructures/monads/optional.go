@@ -2,6 +2,7 @@ package monads
 
 import "errors"
 
+// TODO: add tests
 // Optional is a monad that represents a value that may or may not exist
 type Optional[T any] struct {
 	value *T
