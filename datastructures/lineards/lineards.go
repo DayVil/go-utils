@@ -7,6 +7,7 @@ type LinearDS[T any] interface {
 
 	// Dequeue Pop removes an item from the data structure
 	Dequeue() T
+	//TODO make a non blocking dequeue
 
 	// DequeueAll Pops all items from the data structure
 	DequeueAll() []T
