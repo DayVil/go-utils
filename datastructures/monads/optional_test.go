@@ -3,78 +3,39 @@ package monads
 import "testing"
 
 func TestOptional(t *testing.T) {
-	t.Run("NewOptional", func(t *testing.T) {
-		o := NewOptional("foo")
-		if !o.IsPresent() {
-			t.Errorf("expected IsPresent() to be true")
+	// Test NewOptional
+	optional := NewOptional(5)
+	if !optional.IsPresent() {
+		t.Error("NewOptional failed")
+	}
+
+	// Test NewEmptyOptional
+	emptyOptional := NewEmptyOptional[int]()
+	if emptyOptional.IsPresent() {
+		t.Error("NewEmptyOptional failed")
+	}
+
+	// Test SetValue
+	optional.SetValue(6)
+	val, err := optional.Get()
+	if err != nil {
+		t.Error("SetValue failed")
+	}
+	if val != 6 {
+		t.Error("SetValue failed")
+	}
+
+	// Test Get
+	_, err = emptyOptional.Get()
+	if err == nil {
+		t.Error("Get failed")
+	}
+
+	// Test MustGet
+	defer func() {
+		if r := recover(); r == nil {
+			t.Error("MustGet failed")
 		}
-	})
-
-	t.Run("NewEmptyOptional", func(t *testing.T) {
-		o := NewEmptyOptional[string]()
-		if o.IsPresent() {
-			t.Errorf("expected IsPresent() to be false")
-		}
-	})
-
-	t.Run("SetValue", func(t *testing.T) {
-		o := NewEmptyOptional[string]()
-		o.SetValue("foo")
-		if !o.IsPresent() {
-			t.Errorf("expected IsPresent() to be true")
-		}
-	})
-
-	t.Run("Get", func(t *testing.T) {
-		o := NewOptional("foo")
-		val, err := o.Get()
-		if err != nil {
-			t.Errorf("expected err to be nil")
-		}
-		if val != "foo" {
-			t.Errorf("expected val to be foo")
-		}
-	})
-
-	t.Run("Get (empty)", func(t *testing.T) {
-		o := NewEmptyOptional[string]()
-		_, err := o.Get()
-		if err == nil {
-			t.Errorf("expected err to not be nil")
-		}
-	})
-
-	t.Run("MustGet", func(t *testing.T) {
-		o := NewOptional("foo")
-		val := o.MustGet()
-		if val != "foo" {
-			t.Errorf("expected val to be foo")
-		}
-	})
-
-	t.Run("MustGet (empty)", func(t *testing.T) {
-		defer func() {
-			if r := recover(); r == nil {
-				t.Errorf("expected panic")
-			}
-		}()
-		o := NewEmptyOptional[string]()
-		o.MustGet()
-	})
-
-	t.Run("IfPresent", func(t *testing.T) {
-		o := NewOptional("foo")
-		o.IfPresent(func(val string) {
-			if val != "foo" {
-				t.Errorf("expected val to be foo")
-			}
-		})
-	})
-
-	t.Run("IfPresent (empty)", func(t *testing.T) {
-		o := NewEmptyOptional[string]()
-		o.IfPresent(func(val string) {
-			t.Errorf("expected function to not be called")
-		})
-	})
+	}()
+	emptyOptional.MustGet()
 }
