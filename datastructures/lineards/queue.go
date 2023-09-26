@@ -35,7 +35,6 @@ func (q *Queue[T]) Enqueue(item ...T) {
 func (q *Queue[T]) Dequeue() T {
 	q.mutex.Lock()
 	defer q.mutex.Unlock()
-
 	for len(q.queue) == 0 {
 		q.cond.Wait()
 	}
@@ -57,18 +56,18 @@ func (q *Queue[T]) DequeueAll() []T {
 
 // IsEmpty checks if the queue is empty.
 func (q *Queue[T]) IsEmpty() bool {
-	q.mutex.RLock()
-	defer q.mutex.RUnlock()
+	q.mutex.Lock()
+	defer q.mutex.Unlock()
 	return len(q.queue) == 0
 }
 
 // Peek returns the first item in the queue without removing it.
 func (q *Queue[T]) Peek() T {
+	q.mutex.RLock()
+	defer q.mutex.RUnlock()
 	for len(q.queue) == 0 {
 		q.cond.Wait()
 	}
-	q.mutex.RLock()
-	defer q.mutex.RUnlock()
 	return q.queue[0]
 }
 
