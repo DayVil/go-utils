@@ -10,10 +10,12 @@ type FilesAndFolders struct {
 	Folders []string
 }
 
+// IsForbiddenDir checks if the directory is forbidden
 func IsForbiddenDir(name string) bool {
 	return name == "System Volume Information" || name == "$RECYCLE.BIN" || name == "RECYCLER" || name == ".Trash-1000" || name == ".git" || name == ".svn" || name == ".idea" || name == ".vscode" || name == "node_modules" || name == "vendor"
 }
 
+// IndexFiles indexes all files and folders in the given directory except the forbidden ones
 func IndexFiles(root string) (*FilesAndFolders, error) {
 	fAndF := FilesAndFolders{}
 	root = filepath.Clean(root)
@@ -42,6 +44,7 @@ func IndexFiles(root string) (*FilesAndFolders, error) {
 	return &fAndF, nil
 }
 
+// IndexFiles indexes all files and folders in the given directory
 func IndexAllFiles(root string) (*FilesAndFolders, error) {
 	fAndF := FilesAndFolders{}
 	root = filepath.Clean(root)
