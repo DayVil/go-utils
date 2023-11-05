@@ -9,26 +9,25 @@ func TestOptional(t *testing.T) {
 		t.Error("NewOptional failed")
 	}
 
-	// Test NewEmptyOptional
-	emptyOptional := NewEmptyOptional[int]()
-	if emptyOptional.IsPresent() {
-		t.Error("NewEmptyOptional failed")
-	}
-
-	// Test SetValue
-	optional.SetValue(6)
-	val, err := optional.Get()
-	if err != nil {
-		t.Error("SetValue failed")
-	}
-	if val != 6 {
-		t.Error("SetValue failed")
-	}
+	sevenOptional := NewOptional(7)
 
 	// Test Get
-	_, err = emptyOptional.Get()
-	if err == nil {
+	_, err := sevenOptional.Get()
+	if err != nil {
 		t.Error("Get failed")
+	}
+
+	// Test IfPresent
+	sevenOptional.IfPresent(func(i int) {
+		if i != 7 {
+			t.Error("IfPresent failed")
+		}
+	})
+
+	emptyOptional := NewEmptyOptional[int]()
+	// Test OrElse
+	if emptyOptional.OrElse(7) != 7 {
+		t.Error("OrElse failed")
 	}
 
 	// Test MustGet
@@ -38,16 +37,4 @@ func TestOptional(t *testing.T) {
 		}
 	}()
 	emptyOptional.MustGet()
-}
-
-func TestOptionalGoroutine(t *testing.T) {
-	optional := NewOptional(5)
-	go optional.SetValue(6)
-	val, err := optional.Get()
-	if err != nil {
-		t.Error("SetValue failed")
-	}
-	if val != 6 {
-		t.Error("SetValue failed")
-	}
 }

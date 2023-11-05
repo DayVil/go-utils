@@ -12,11 +12,11 @@ func NewDoubleSidedQueue[T any]() *DoubleSidedQueue[T] {
 }
 
 func (dq *DoubleSidedQueue[T]) DequeueBack() T {
-	dq.mutex.Lock()
-	defer dq.mutex.Unlock()
+	dq.Lock()
+	defer dq.Unlock()
 
 	for len(dq.queue) == 0 {
-		dq.cond.Wait()
+		dq.Wait()
 	}
 
 	lastItem := len(dq.queue) - 1

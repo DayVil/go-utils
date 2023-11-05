@@ -13,10 +13,10 @@ func NewStack[T any]() *Stack[T] {
 
 // Enqueue Push adds an item to the stack.
 func (s *Stack[T]) Enqueue(item ...T) {
-	s.mutex.Lock()
-	defer s.mutex.Unlock()
+	s.Lock()
+	defer s.Unlock()
 	for _, i := range item {
 		s.queue = append([]T{i}, s.queue...)
-		s.cond.Signal()
+		s.Signal()
 	}
 }
